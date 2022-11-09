@@ -1,5 +1,3 @@
-
-
 from datetime import datetime
 import random
 
@@ -17,9 +15,10 @@ class random_integer_1to5:
 class random_integer_1to7:
     generator = random_integer_1to5()
     def get_next_integer(self):
-        return int(7 * (self.generator.get_next_integer()/self.generator.get_size()))
+        result = self.generator.get_next_integer() + random.uniform(-0.28,0.28)
+        return int(7 * (result/self.generator.get_size()))
 
 if __name__ == "__main__":
     r = random_integer_1to7()
-    for i in range(100):
+    for i in range(1000):
         print(r.get_next_integer())
