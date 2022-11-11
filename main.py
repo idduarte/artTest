@@ -8,17 +8,34 @@ class random_integer_1to5:
 
     def get_next_integer(self):
         return random.choice(self.values)
-    
-    def get_size(self):
-        return len(self.values)
 
 class random_integer_1to7:
-    generator = random_integer_1to5()
+    ## Articulo base para el algoritmo
+    ## https://es.wikipedia.org/wiki/Generador_de_n%C3%BAmeros_aleatorios
+
+    ##  X_(n + 1) = ( a*X_n + c ) (mod m)
+    """
+    El standard POSIX C define para la función de generación de números 
+    seudoaleatorios los valores de c = 12345, m = 32768  y a = 1103515245. 
+    """
+    a = 1103515245
+    c = 12345
+    m = 32768
+    
+    def __init__(self, seed) -> None:
+        self.seed = seed
+
     def get_next_integer(self):
-        result = self.generator.get_next_integer() + random.uniform(-0.28,0.28)
-        return int(7 * (result/self.generator.get_size()))
+        xn1 = ((self.a * self.seed) + self.c) % self.m
+        self.seed = xn1
+        return (1 + int(7 * (xn1 / self.m)))
 
 if __name__ == "__main__":
-    r = random_integer_1to7()
-    for i in range(1000):
-        print(r.get_next_integer())
+    r5 = random_integer_1to5()
+    seed = r5.get_next_integer()
+    r7 = random_integer_1to7(seed)
+    with open('data.txt', 'w') as f:
+        for i in range(32768):
+            f.write(str(r7.get_next_integer())+"\n")
+            # print(r7.get_next_integer())
+        
